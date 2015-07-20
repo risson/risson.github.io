@@ -19,9 +19,9 @@
     	</ul>
     </div>
 	<div class="wrap-header">
-			<h1>
-            <a href="/" id="title"></a>
-			</h1>
+	<h1>
+    <a href="/" id="title"></a>
+	</h1>
 	</div>
 <div id="md" style="display: none;">
 <!-- markdown -->
@@ -34,11 +34,7 @@ My name is Risson Yao and I'm now working at the global digital marketing team i
 </div>
 <div class="entry" id="main">
 <!-- content -->
-<p>I finally finished polishing the layout of this blog and yes, my blog is now officially borned! YAY!</p>
 
-<p>My name is Risson Yao and I'm now working at the global digital marketing team in EF Shanghai. I'm a CRM manager now and also approaching my career path as a data analyst. In this blog I'm going to post articles about my learning path and experience as a data analyst. It's gonna be exciting!</p>
-
-<p>(Thanks to isnowfy (http://isnowfy.github.io/), who developed the initial backend framework of this blogging system. I simply forked his work in Github, transformed the layout a bit and turned it into my own blog.)</p>
 <!-- content end -->
 </div>
 <br>
@@ -73,23 +69,17 @@ $(document).ready(function() {
         dataType: "json",
         success: function(data) {
             $("#title").html(data.name);
-            var pages = [];
+            var pagesTemplate = Hogan.compile($("#pagesTemplate").html());
+            var pagesHtml = pagesTemplate.render({"pages": data.pages});
+            $("#pages").append(pagesHtml);
             //path
             var path = "helloworld.html";
             //path end
             var now = 0;
-            for (var i = 0; i < data.pages.length; ++i)
-                if (path == data.pages[i].path) {
+            for (var i = 0; i < data.posts.length; ++i)
+                if (path == data.posts[i].path)
                     now = i;
-                    pages.push({"select": true, "path": data.pages[i].path, "title": data.pages[i].title});
-                }
-                else {
-                    pages.push({"select": false, "path": data.pages[i].path, "title": data.pages[i].title});
-                }
-            var pagesTemplate = Hogan.compile($("#pagesTemplate").html());
-            var pagesHtml = pagesTemplate.render({"pages": pages});
-            $("#pages").append(pagesHtml);
-            var post = data.pages[now];
+            var post = data.posts[now];
             var tmp = post.tags.split(" ");
             var tags = [];
             for (var i = 0; i < tmp.length; ++i)
