@@ -34,7 +34,6 @@ Below I'll illustrate how to do it by making some dummy data:
 ```
 library(data.table)
 DT <- data.table(email = c("aaa@aaa.com","bbb@bbb.com","1123@qq.com","aaa@aaa.com","bbb@bbb.com"), status = c("student","student","lead","lead","opportunity"))
-DT
 ```
 This is how it looks:
 ```
@@ -48,7 +47,6 @@ This is how it looks:
 Then we only need to run 1 line of code:
 ```
 DT[,count:=.N, list(email)]
-DT
 ```
 ```
          email      status count
@@ -64,7 +62,6 @@ DT2<-unique(DT, by="email")
 DT2 <- DT2[,list(email,count)]
 library(dplyr)
 DT2 <- arrange(DT2, desc(count))
-DT2
 ```
 Here we use the **dplyr** package to help arrange the order by count. Below is the result of the above code:
 ```
@@ -73,8 +70,22 @@ Here we use the **dplyr** package to help arrange the order by count. Below is t
 2: bbb@bbb.com     2
 3: 1123@qq.com     1
 ```
+----------------
+After a while I just found out a more efficient way to do the same thing, that is using the *group_by* and *summarize* function in the **dplyr** package.
 
-Please feel free to correct me if there's a flaw in my code. Your comments are appreciated :)
+```
+library(dplyr)
+DT2 <- group_by(DT, email)
+summarize(DT2, n=n())
+```
+The *n()* function in the **dplyr** package is exactly what I am looking for.
+
+To make it even more simpler, I can also use the pipeline operator, so that I don't have to specify the data table each time:
+```
+DT %>% group_by(email) %>% summarize(n=n())
+```
+
+Please feel free to contact me if there's a flaw in my code. Your comments are appreciated :)
 <!-- markdown end -->
 </div>
 <div class="entry" id="main">
@@ -87,7 +98,6 @@ Please feel free to correct me if there's a flaw in my code. Your comments are a
 
 <pre><code>library(data.table)
 DT &lt;- data.table(email = c("aaa@aaa.com","bbb@bbb.com","1123@qq.com","aaa@aaa.com","bbb@bbb.com"), status = c("student","student","lead","lead","opportunity"))
-DT
 </code></pre>
 
 <p>This is how it looks:</p>
@@ -103,7 +113,6 @@ DT
 <p>Then we only need to run 1 line of code:</p>
 
 <pre><code>DT[,count:=.N, list(email)]
-DT
 </code></pre>
 
 <pre><code>         email      status count
@@ -120,7 +129,6 @@ DT
 DT2 &lt;- DT2[,list(email,count)]
 library(dplyr)
 DT2 &lt;- arrange(DT2, desc(count))
-DT2
 </code></pre>
 
 <p>Here we use the <strong>dplyr</strong> package to help arrange the order by count. Below is the result of the above code:</p>
@@ -131,7 +139,23 @@ DT2
 3: 1123@qq.com     1
 </code></pre>
 
-<p>Please feel free to correct me if there's a flaw in my code. Your comments are appreciated :)</p>
+<hr>
+
+<p>After a while I just found out a more efficient way to do the same thing, that is using the <em>group_by</em> and <em>summarize</em> function in the <strong>dplyr</strong> package.</p>
+
+<pre><code>library(dplyr)
+DT2 &lt;- group_by(DT, email)
+summarize(DT2, n=n())
+</code></pre>
+
+<p>The <em>n()</em> function in the <strong>dplyr</strong> package is exactly what I am looking for.</p>
+
+<p>To make it even more simpler, I can also use the pipeline operator, so that I don't have to specify the data table each time:</p>
+
+<pre><code>DT %&gt;% group_by(email) %&gt;% summarize(n=n())
+</code></pre>
+
+<p>Please feel free to contact me if there's a flaw in my code. Your comments are appreciated :)</p>
 <!-- content end -->
 </div>
 <br>
