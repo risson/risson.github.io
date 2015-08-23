@@ -1,0 +1,205 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="Keywords" content="blog"/>
+    <meta name="Description" content="blog"/>
+    <title>Risson's Blog</title>
+    <link rel="shortcut icon" href="/static/favicon.png"/>
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+</head>
+<body>
+<div class="main">
+    <div class="header">
+    	<ul id="pages">
+            <li><a href="/">home</a></li>
+            <li><a href="/#/tags">tags</a></li>
+            <li><a href="/#/archive">archive</a></li>
+    	</ul>
+    </div>
+	<div class="wrap-header">
+	<h1>
+    <a href="/" id="title"></a>
+	</h1>
+	</div>
+<div id="md" style="display: none;">
+<!-- markdown -->
+Since 2 weeks ago we've worked on a project (triggered email). The first thing we need to do is to clean up our database. I won't describe much detail about how messy the database is, but I believe it's one of the most horrible enterprise database in the world... There're lots of duplicate information in it, including email address and phone number, and clearly no one ever put any effort in cleaning those. 
+
+We subset some basic data for the last 3 months, and want to see how many duplicate emails/phone numbers that we have. I wasn't able to find a way to work on it in R 2 weeks ago, but now I've found out the solution using the **data.table** package and the **dplyr** package.
+
+Below I'll illustrate how to do it by making some dummy data:
+
+```
+library(data.table)
+DT <- data.table(email = c("aaa@aaa.com","bbb@bbb.com","1123@qq.com","aaa@aaa.com","bbb@bbb.com"), status = c("student","student","lead","lead","opportunity"))
+DT
+```
+This is how it looks:
+```
+         email      status
+1: aaa@aaa.com     student
+2: bbb@bbb.com     student
+3: 1123@qq.com        lead
+4: aaa@aaa.com        lead
+5: bbb@bbb.com opportunity
+```
+Then we only need to run 1 line of code:
+```
+DT[,count:=.N, list(email)]
+DT
+```
+```
+         email      status count
+1: aaa@aaa.com     student     2
+2: bbb@bbb.com     student     2
+3: 1123@qq.com        lead     1
+4: aaa@aaa.com        lead     2
+5: bbb@bbb.com opportunity     2
+```
+It automatically assigned the number of existences in a new column. If we want to see a summary by each email and sort by high frequency to low frequency:
+```
+DT2<-unique(DT, by="email")
+DT2 <- DT2[,list(email,count)]
+library(dplyr)
+DT2 <- arrange(DT2, desc(count))
+DT2
+```
+Here we use the **dplyr** package to help arrange the order by count. Below is the result of the above code:
+```
+         email count
+1: aaa@aaa.com     2
+2: bbb@bbb.com     2
+3: 1123@qq.com     1
+```
+
+Please feel free to correct me if there's a flaw in my code. Your comments are appreciated :)
+<!-- markdown end -->
+</div>
+<div class="entry" id="main">
+<!-- content -->
+<p>Since 2 weeks ago we've worked on a project (triggered email). The first thing we need to do is to clean up our database. I won't describe much detail about how messy the database is, but I believe it's one of the most horrible enterprise database in the world... There're lots of duplicate information in it, including email address and phone number, and clearly no one ever put any effort in cleaning those. </p>
+
+<p>We subset some basic data for the last 3 months, and want to see how many duplicate emails/phone numbers that we have. I wasn't able to find a way to work on it in R 2 weeks ago, but now I've found out the solution using the <strong>data.table</strong> package and the <strong>dplyr</strong> package.</p>
+
+<p>Below I'll illustrate how to do it by making some dummy data:</p>
+
+<pre><code>library(data.table)
+DT &lt;- data.table(email = c("aaa@aaa.com","bbb@bbb.com","1123@qq.com","aaa@aaa.com","bbb@bbb.com"), status = c("student","student","lead","lead","opportunity"))
+DT
+</code></pre>
+
+<p>This is how it looks:</p>
+
+<pre><code>         email      status
+1: aaa@aaa.com     student
+2: bbb@bbb.com     student
+3: 1123@qq.com        lead
+4: aaa@aaa.com        lead
+5: bbb@bbb.com opportunity
+</code></pre>
+
+<p>Then we only need to run 1 line of code:</p>
+
+<pre><code>DT[,count:=.N, list(email)]
+DT
+</code></pre>
+
+<pre><code>         email      status count
+1: aaa@aaa.com     student     2
+2: bbb@bbb.com     student     2
+3: 1123@qq.com        lead     1
+4: aaa@aaa.com        lead     2
+5: bbb@bbb.com opportunity     2
+</code></pre>
+
+<p>It automatically assigned the number of existences in a new column. If we want to see a summary by each email and sort by high frequency to low frequency:</p>
+
+<pre><code>DT2&lt;-unique(DT, by="email")
+DT2 &lt;- DT2[,list(email,count)]
+library(dplyr)
+DT2 &lt;- arrange(DT2, desc(count))
+DT2
+</code></pre>
+
+<p>Here we use the <strong>dplyr</strong> package to help arrange the order by count. Below is the result of the above code:</p>
+
+<pre><code>         email count
+1: aaa@aaa.com     2
+2: bbb@bbb.com     2
+3: 1123@qq.com     1
+</code></pre>
+
+<p>Please feel free to correct me if there's a flaw in my code. Your comments are appreciated :)</p>
+<!-- content end -->
+</div>
+<br>
+<br>
+    <div id="disqus_thread"></div>
+	<div class="footer">
+		<p>© Copyright 2015 by Risson, Designed by Risson</p>
+	</div>
+</div>
+<script src="main.js"></script>
+<script id="content" type="text/mustache">
+    <h1>{{title}}</h1>
+    <div class="tag">
+    {{date}}
+    {{#tags}}
+    <a href="/#/tag/{{name}}">#{{name}}</a>
+    {{/tags}}
+    </div>
+</script>
+<script id="pagesTemplate" type="text/mustache">
+    {{#pages}}
+    <li>
+        <a href="{{path}}">{{title}}</a>
+    </li>
+    {{/pages}}
+</script>
+<script>
+$(document).ready(function() {
+    $.ajax({
+        url: "main.json",
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+            $("#title").html(data.name);
+            var pagesTemplate = Hogan.compile($("#pagesTemplate").html());
+            var pagesHtml = pagesTemplate.render({"pages": data.pages});
+            $("#pages").append(pagesHtml);
+            //path
+            var path = "count_aggregate_values_from_data_table_in_R.html";
+            //path end
+            var now = 0;
+            for (var i = 0; i < data.posts.length; ++i)
+                if (path == data.posts[i].path)
+                    now = i;
+            var post = data.posts[now];
+            var tmp = post.tags.split(" ");
+            var tags = [];
+            for (var i = 0; i < tmp.length; ++i)
+                if (tmp[i].length > 0)
+                    tags.push({"name": tmp[i]});
+            var contentTemplate = Hogan.compile($("#content").html());
+            var contentHtml = contentTemplate.render({"title": post.title, "tags": tags, "date": post.date});
+            $("#main").prepend(contentHtml);
+            if (data.disqus_shortname.length > 0) {
+                var disqus_shortname = data.disqus_shortname;
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            }
+        }
+    });
+});
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ["\\(", "\\)"]], processEscapes: true}});
+</script>
+</body>
+</html>
