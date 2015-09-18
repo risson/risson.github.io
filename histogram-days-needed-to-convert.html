@@ -67,7 +67,7 @@ DaysToConvertPlot <- function(url) {
     
     hist(DT$ConvertDayRange, breaks = 50, xlab = "Days to convert", main = "Days to convert (all)")
     
-    hist(DT$ConvertDayRange[DT$ConvertDayRange %in% -100:100], breaks = 50, xlab = "Days to convert", main = "Days to convert (-100 to 100 days)")
+    hist(DT$ConvertDayRange[DT$ConvertDayRange %in% 0:100], breaks = 50, xlab = "Days to convert", main = "Days to convert (0 to 100 days)")
 }
 ```
 ```
@@ -118,7 +118,7 @@ DaysToConvertPlot &lt;- function(url) {
 
     hist(DT$ConvertDayRange, breaks = 50, xlab = "Days to convert", main = "Days to convert (all)")
 
-    hist(DT$ConvertDayRange[DT$ConvertDayRange %in% -100:100], breaks = 50, xlab = "Days to convert", main = "Days to convert (-100 to 100 days)")
+    hist(DT$ConvertDayRange[DT$ConvertDayRange %in% 0:100], breaks = 50, xlab = "Days to convert", main = "Days to convert (0 to 100 days)")
 }
 </code></pre>
 
