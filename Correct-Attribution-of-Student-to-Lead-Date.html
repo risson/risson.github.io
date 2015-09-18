@@ -30,8 +30,8 @@ Below is the R code for generating the correct student number attributed to a pa
 The steps are:
 
 1. Input file is the detail leads information from VS3, with 2 columns "Lead.Submitted.Date" and "Odin.First.Paid.Date".
-2. Create a new column called "StudentOfTheDate". If "Odin.First.Paid.Date" is later than "Lead.Submitted.Date", then mark "StudentOfTheDate" as 1.
-3. Summarize "StudentOfTheDate" by "Lead.Submitted.Date", and generate a table of 2 columns: "DayIndex" and "StudentOfTheDate" - table A
+2. Create a new column called "StudentOfTheDate". If "Odin.First.Paid.Date" is later than "Lead.Submitted.Date", then mark "StudentOfTheDate" as 1, otherwise 0.
+3. Aggregate the sum of "StudentOfTheDate" by "Lead.Submitted.Date", and generate a table of 2 columns: "DayIndex" and "StudentOfTheDate" - table A
 4. Read the original file provided by Julia:  "data for Jeremy report- by day.xlsx" (changed it into csv) - table B
 5. Merge the 2 files together, with a new column called StudentOfTheDate. (B left join A)
 6. Make 2 scatterplots of the old and new calculation of students by date
@@ -137,8 +137,8 @@ AllocateStudent <- function(InputUrl, OutputUrl, NewStudentOfTheDate) {
 
 <ol>
 <li>Input file is the detail leads information from VS3, with 2 columns "Lead.Submitted.Date" and "Odin.First.Paid.Date".</li>
-<li>Create a new column called "StudentOfTheDate". If "Odin.First.Paid.Date" is later than "Lead.Submitted.Date", then mark "StudentOfTheDate" as 1.</li>
-<li>Summarize "StudentOfTheDate" by "Lead.Submitted.Date", and generate a table of 2 columns: "DayIndex" and "StudentOfTheDate" - table A</li>
+<li>Create a new column called "StudentOfTheDate". If "Odin.First.Paid.Date" is later than "Lead.Submitted.Date", then mark "StudentOfTheDate" as 1, otherwise 0.</li>
+<li>Aggregate the sum of "StudentOfTheDate" by "Lead.Submitted.Date", and generate a table of 2 columns: "DayIndex" and "StudentOfTheDate" - table A</li>
 <li>Read the original file provided by Julia:  "data for Jeremy report- by day.xlsx" (changed it into csv) - table B</li>
 <li>Merge the 2 files together, with a new column called StudentOfTheDate. (B left join A)</li>
 <li>Make 2 scatterplots of the old and new calculation of students by date</li>
