@@ -1,0 +1,149 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="Keywords" content="blog"/>
+    <meta name="Description" content="blog"/>
+    <title>Risson's Blog</title>
+    <link rel="shortcut icon" href="/static/favicon.png"/>
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+</head>
+<body>
+<div class="main">
+    <div class="header">
+    	<ul id="pages">
+            <li><a href="/">home</a></li>
+            <li><a href="/#/tags">tags</a></li>
+            <li><a href="/#/archive">archive</a></li>
+    	</ul>
+    </div>
+	<div class="wrap-header">
+	<h1>
+    <a href="/" id="title"></a>
+	</h1>
+	</div>
+<div id="md" style="display: none;">
+<!-- markdown -->
+OKR for Q1 FY16: build dashboards for GDM and local markets, with data automation in Knime and visualization in Tableau.
+
+Above is my goal for the recent 3 months. We decided to use [Knime](http://www.knime.org/) for data blending and [Tableau](www.tableau.com) for visualization. The first obstacle I've come across is the issue with querying Google Analytics data. Since we use the free version of GA, we only get sampled data in the reports. The problem still exists if I use the Google Analytics nodes in Knime, unless if I only get no more than 5 days' data.
+
+The first solution I come up with is quite stupid. I simple make as many GA nodes as possible, and concatenate them together. It's tedious and time consuming to do so, which also leads to mistakes.
+
+Then I decide to find alternatives. I realize that there are actually quite a lot of packages that I can use in R: [RGoogleAnalytics](https://github.com/Tatvic/RGoogleAnalytics), a classic and robust solution created by Kushan Shah, [RGA (upper case)](https://bitbucket.org/unikum/rga/src), with more efficient functions and [rga (lower case)](http://skardhamar.github.io/rga/). I choose rga because it provides convenient functions to make querying unsampled GA data possible, and also been used by many people (I can find help from stackoverflow or other sites). 
+
+I first install the package, authorize the access and try a few lines of code in Rstudio. One good thing about this package is that I can see the status of how many observations I get for every iteration (by day). Then I started to generate GA data using R Snippet in Knime instead of using the default Google nodes. The network issue in China makes it a little bit more annoying, since the Astrill VPN I've been using doesn't work in Knime. I then use other VPN solutions and finally I get all the results I need. Below is the code I use in the R snippet in Knime:
+
+```
+library(rga)
+library(lubridate)
+rga.open(instance = "ga", where = "C:\\Users\\risson.yao\\Documents\\RGAauthorize\\ga.rga")
+knime.out <- ga$getData(ids = "3012479",
+           start.date = "2014-10-01",
+           end.date = "2015-09-30",
+           metrics = "ga:users",
+           filters = "ga:hostname==m.ef.com.cn",
+           dimensions = "ga:date",
+           batch = TRUE, walk = TRUE)
+```
+
+The parameter "batch = TRUE" and "walk = TRUE" allows the function call by batch hence we can get unsampled data.
+<!-- markdown end -->
+</div>
+<div class="entry" id="main">
+<!-- content -->
+<p>OKR for Q1 FY16: build dashboards for GDM and local markets, with data automation in Knime and visualization in Tableau.</p>
+
+<p>Above is my goal for the recent 3 months. We decided to use <a href="http://www.knime.org/">Knime</a> for data blending and <a href="www.tableau.com">Tableau</a> for visualization. The first obstacle I've come across is the issue with querying Google Analytics data. Since we use the free version of GA, we only get sampled data in the reports. The problem still exists if I use the Google Analytics nodes in Knime, unless if I only get no more than 5 days' data.</p>
+
+<p>The first solution I come up with is quite stupid. I simple make as many GA nodes as possible, and concatenate them together. It's tedious and time consuming to do so, which also leads to mistakes.</p>
+
+<p>Then I decide to find alternatives. I realize that there are actually quite a lot of packages that I can use in R: <a href="https://github.com/Tatvic/RGoogleAnalytics">RGoogleAnalytics</a>, a classic and robust solution created by Kushan Shah, <a href="https://bitbucket.org/unikum/rga/src">RGA (upper case)</a>, with more efficient functions and <a href="http://skardhamar.github.io/rga/">rga (lower case)</a>. I choose rga because it provides convenient functions to make querying unsampled GA data possible, and also been used by many people (I can find help from stackoverflow or other sites). </p>
+
+<p>I first install the package, authorize the access and try a few lines of code in Rstudio. One good thing about this package is that I can see the status of how many observations I get for every iteration (by day). Then I started to generate GA data using R Snippet in Knime instead of using the default Google nodes. The network issue in China makes it a little bit more annoying, since the Astrill VPN I've been using doesn't work in Knime. I then use other VPN solutions and finally I get all the results I need. Below is the code I use in the R snippet in Knime:</p>
+
+<pre><code>library(rga)
+library(lubridate)
+rga.open(instance = "ga", where = "C:\\Users\\risson.yao\\Documents\\RGAauthorize\\ga.rga")
+knime.out &lt;- ga$getData(ids = "3012479",
+           start.date = "2014-10-01",
+           end.date = "2015-09-30",
+           metrics = "ga:users",
+           filters = "ga:hostname==m.ef.com.cn",
+           dimensions = "ga:date",
+           batch = TRUE, walk = TRUE)
+</code></pre>
+
+<p>The parameter "batch = TRUE" and "walk = TRUE" allows the function call by batch hence we can get unsampled data.</p>
+<!-- content end -->
+</div>
+<br>
+<br>
+    <div id="disqus_thread"></div>
+	<div class="footer">
+		<p>© Copyright 2015 by Risson, Designed by Risson</p>
+	</div>
+</div>
+<script src="main.js"></script>
+<script id="content" type="text/mustache">
+    <h1>{{title}}</h1>
+    <div class="tag">
+    {{date}}
+    {{#tags}}
+    <a href="/#/tag/{{name}}">#{{name}}</a>
+    {{/tags}}
+    </div>
+</script>
+<script id="pagesTemplate" type="text/mustache">
+    {{#pages}}
+    <li>
+        <a href="{{path}}">{{title}}</a>
+    </li>
+    {{/pages}}
+</script>
+<script>
+$(document).ready(function() {
+    $.ajax({
+        url: "main.json",
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+            $("#title").html(data.name);
+            var pagesTemplate = Hogan.compile($("#pagesTemplate").html());
+            var pagesHtml = pagesTemplate.render({"pages": data.pages});
+            $("#pages").append(pagesHtml);
+            //path
+            var path = "Using-R-in-Knime-to-get-unsampled-Google-Analytics-data.html";
+            //path end
+            var now = 0;
+            for (var i = 0; i < data.posts.length; ++i)
+                if (path == data.posts[i].path)
+                    now = i;
+            var post = data.posts[now];
+            var tmp = post.tags.split(" ");
+            var tags = [];
+            for (var i = 0; i < tmp.length; ++i)
+                if (tmp[i].length > 0)
+                    tags.push({"name": tmp[i]});
+            var contentTemplate = Hogan.compile($("#content").html());
+            var contentHtml = contentTemplate.render({"title": post.title, "tags": tags, "date": post.date});
+            $("#main").prepend(contentHtml);
+            if (data.disqus_shortname.length > 0) {
+                var disqus_shortname = data.disqus_shortname;
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            }
+        }
+    });
+});
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ["\\(", "\\)"]], processEscapes: true}});
+</script>
+</body>
+</html>
