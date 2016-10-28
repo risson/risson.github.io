@@ -29,6 +29,46 @@ It's always been a trouble reading excel file into R, especially when there are 
 
 However, the data guru [Hadley Wickham](https://github.com/hadley) who invented famous packages like ggplot2 and dplyr, has developed an awesome package to deal with this issue - [readxl](https://github.com/hadley/readxl). Compared to existing libraries like xlsx and XLConnect, it runs much faster, and is neat when dealing with multi-language.
 
+First we need to install this package:
+
+```
+install.packages("readxl")
+```
+
+Then we include the library in our code:
+
+```
+library(readxl)
+```
+
+The next step, we need to set the system locale of our working space to Chinese. You can get your system locale by calling below function:
+
+```
+Sys.getlocale() # My current system locale is "English_United States.1252"
+
+```
+```
+> Sys.getlocale()
+[1] "LC_COLLATE=English_United States.1252;LC_CTYPE=English_United States.1252;LC_MONETARY=English_United States.1252;LC_NUMERIC=C;LC_TIME=English_United States.1252"
+```
+Then I can set my system locale to Chinese:
+
+```
+Sys.setlocale(category="LC_ALL", locale = "chinese") 
+```
+Then you can start to import your excel file to R using read_excel() function:
+```
+# Read excel data using readxl
+df <- read_excel("myspreadsheet.xlsx",sheet=1)
+```
+Check the file with head() or fix(), you can see that the Chinese characters are coming through really well!
+
+Of course you can set back your locale to English_United States.1252 at the end of the code:
+```
+Sys.setlocale(category="LC_ALL", locale = "English_United States.1252") 
+```
+
+Hope every R coders who needs to deal with multi-language finds it helpful!
 
 <!-- markdown end -->
 </div>
@@ -37,6 +77,45 @@ However, the data guru [Hadley Wickham](https://github.com/hadley) who invented 
 <p>It's always been a trouble reading excel file into R, especially when there are UTF-8 characters.</p>
 
 <p>However, the data guru <a href="https://github.com/hadley">Hadley Wickham</a> who invented famous packages like ggplot2 and dplyr, has developed an awesome package to deal with this issue - <a href="https://github.com/hadley/readxl">readxl</a>. Compared to existing libraries like xlsx and XLConnect, it runs much faster, and is neat when dealing with multi-language.</p>
+
+<p>First we need to install this package:</p>
+
+<pre><code>install.packages("readxl")
+</code></pre>
+
+<p>Then we include the library in our code:</p>
+
+<pre><code>library(readxl)
+</code></pre>
+
+<p>The next step, we need to set the system locale of our working space to Chinese. You can get your system locale by calling below function:</p>
+
+<pre><code>Sys.getlocale() # My current system locale is "English_United States.1252"
+</code></pre>
+
+<pre><code>&gt; Sys.getlocale()
+[1] "LC_COLLATE=English_United States.1252;LC_CTYPE=English_United States.1252;LC_MONETARY=English_United States.1252;LC_NUMERIC=C;LC_TIME=English_United States.1252"
+</code></pre>
+
+<p>Then I can set my system locale to Chinese:</p>
+
+<pre><code>Sys.setlocale(category="LC_ALL", locale = "chinese") 
+</code></pre>
+
+<p>Then you can start to import your excel file to R using read_excel() function:</p>
+
+<pre><code># Read excel data using readxl
+df &lt;- read_excel("myspreadsheet.xlsx",sheet=1)
+</code></pre>
+
+<p>Check the file with head() or fix(), you can see that the Chinese characters are coming through really well!</p>
+
+<p>Of course you can set back your locale to English_United States.1252 at the end of the code:</p>
+
+<pre><code>Sys.setlocale(category="LC_ALL", locale = "English_United States.1252") 
+</code></pre>
+
+<p>Hope every R coders who needs to deal with multi-language finds it helpful!</p>
 <!-- content end -->
 </div>
 <br>
