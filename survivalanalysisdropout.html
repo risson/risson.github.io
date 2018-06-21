@@ -25,13 +25,22 @@
 	</div>
 <div id="md" style="display: none;">
 <!-- markdown -->
-This quarter our objective is to analyze on students' dropout. We want to understand what causes our students to dropout. If possible, predict when our students are going to dropout, in order to understand their lifetime value.
+This quarter our objective is to analyze on students' dropout. We want to understand what causes our students to leave. If possible, predict when our students are going to dropout, in order to understand their lifetime value.
 
 As a first step, we would like to look at whether our students are leaving us faster than before.
 
 I understand that survival analysis is a great tool to do this kind of analysis. [This blog](http://daynebatten.com)  is a great place for you to learn more about survival analysis (especially posts from 2016 to 2017). In this post, I'll demo how I use it.
 
-## 1. Reshape data set
+## 1. Load packages
+
+I prefer to use data.table to manipulate data frames. For survival analysis, there's a package called 'survival' in R, which was introduced in the blog I mentioned above.
+
+```
+library(data.table)
+library(survival)
+```
+
+## 2. Reshape data set
 
 Below is a mockup data set that I originally have (from 2014-1-1 to 2017-4-14) (df1):
 
@@ -220,13 +229,21 @@ Now the survival curve looks much more reasonable. It seems like our 5 month ret
 </div>
 <div class="entry" id="main">
 <!-- content -->
-<p>This quarter our objective is to analyze on students' dropout. We want to understand what causes our students to dropout. If possible, predict when our students are going to dropout, in order to understand their lifetime value.</p>
+<p>This quarter our objective is to analyze on students' dropout. We want to understand what causes our students to leave. If possible, predict when our students are going to dropout, in order to understand their lifetime value.</p>
 
 <p>As a first step, we would like to look at whether our students are leaving us faster than before.</p>
 
 <p>I understand that survival analysis is a great tool to do this kind of analysis. <a href="http://daynebatten.com">This blog</a>  is a great place for you to learn more about survival analysis (especially posts from 2016 to 2017). In this post, I'll demo how I use it.</p>
 
-<h2 id="1reshapedataset">1. Reshape data set</h2>
+<h2 id="1loadpackages">1. Load packages</h2>
+
+<p>I prefer to use data.table to manipulate data frames. For survival analysis, there's a package called 'survival' in R, which was introduced in the blog I mentioned above.</p>
+
+<pre><code>library(data.table)
+library(survival)
+</code></pre>
+
+<h2 id="2reshapedataset">2. Reshape data set</h2>
 
 <p>Below is a mockup data set that I originally have (from 2014-1-1 to 2017-4-14) (df1):</p>
 
@@ -411,7 +428,7 @@ title(main = "EF Survival Curves by Enroll Date (before vs. after 2016)")
 <br>
     <div id="disqus_thread"></div>
 	<div class="footer">
-		<p>© Copyright 2017 by Risson, Designed by Risson</p>
+		<p>© Copyright 2015 by Risson, Designed by Risson</p>
 	</div>
 </div>
 <script src="main.js"></script>
