@@ -127,7 +127,7 @@ We need to re-organize the data set in order to match the format that the R pack
 <td>SignUpDate</td>
 <td>LastDate</td>
 <td>Dropout</td>
-<td>SignUpAfter2016</td>
+<td>SignUpAFT2016</td>
 <td>Days</td>
 </tr>
 <tr>
@@ -173,14 +173,48 @@ Note that each customer can take several courses. Each course has it's status. E
 
 ## 2. Create Survival Curve
 
-```r
+```
+# Fit survival curves based on the sign up time binary
+fit <- survfit(Surv(Days, Churn) ~ SignUpAFT2016, data = df1)
+
+# Plot the results, add a legend, add a title
+plot(fit, lty = 1:2, mark.time = FALSE, xlim=c(0,600), ylim=c(.5,1), xlab = 'Days since Joining', ylab = 'Percent Surviving')
+legend(10, 0.6, c('Joined Before 2016', 'Joined After 2016'), lty=1:2, bty = 'n', ncol = 2)
+```
+
+The plot looks like this:
+
+<img src="https://raw.githubusercontent.com/risson/risson.github.io/master/survivalplot1.png"/>
+
+It seems like dropout rate is getting higher after 2016 than before. If we show this result to the C-suite, they must be shocked!
+
+## 3. Verify finding and make changes
+
+Wait, as a professional data scientist, we need to be careful when showing insights to senior management group. Is there anything wrong in the process we've done?
+
+Actually yes. When we look at the group 'Joined After 2016', we found that people can sign up from 2016, or early 2017. Note that we captured data till April 14, 2017. For those people who signed up in April 2017, clearly they only 'survived' for less than 1 month, no matter they really dropped out or not. Compared with those who signed up from before 2016, total amount of survivals must always be higher.
+
+So, we have to make changes. We look at survival within 300 days. Also, we remove students who signed up after April 14, 2016.
+
+```
+df2 <- df1[SignUpDate<=as.Date('2016-4-14')]
+```
+
+Let's plot again:
+
+```
+fit <- survfit(Surv(Days, Dropout) ~ SignUpAFT2016, data = df2)
+
+# Plot the results, add a legend, add a title
+plot(fit, lty = 1:2, mark.time = FALSE, xlim=c(0,300), ylim=c(.75,1), xlab = 'Days since Joining', ylab = 'Percent Surviving')
+legend(10, 0.8, c('Joined Before 2016', 'Joined After 2016'), lty=1:2, bty = 'n', ncol = 2)
+title(main = "EF Survival Curves by Enroll Date (before vs. after 2016)")
+```
+
+<img src="https://raw.githubusercontent.com/risson/risson.github.io/master/survivalplot3.png"/>
 
 
-
-
-
-
-
+Now the survival curve looks much more reasonable. It seems like our 5 month retention rate is better than before, but retention for more than 160 days seems worse. This means we need to dig out reasons why retention for longer period is worse than before. Is it because we set up stricter rules on short term retention? Did we launch new course products for which our students didn't like that much? Those questions will lead us to create new analytics projects.
 
 <!-- markdown end -->
 </div>
@@ -288,7 +322,7 @@ Note that each customer can take several courses. Each course has it's status. E
 <td>SignUpDate</td>
 <td>LastDate</td>
 <td>Dropout</td>
-<td>SignUpAfter2016</td>
+<td>SignUpAFT2016</td>
 <td>Days</td>
 </tr>
 <tr>
@@ -333,7 +367,44 @@ Note that each customer can take several courses. Each course has it's status. E
 
 <h2 id="2createsurvivalcurve">2. Create Survival Curve</h2>
 
-<p>```r</p>
+<pre><code># Fit survival curves based on the sign up time binary
+fit &lt;- survfit(Surv(Days, Churn) ~ SignUpAFT2016, data = df1)
+
+# Plot the results, add a legend, add a title
+plot(fit, lty = 1:2, mark.time = FALSE, xlim=c(0,600), ylim=c(.5,1), xlab = 'Days since Joining', ylab = 'Percent Surviving')
+legend(10, 0.6, c('Joined Before 2016', 'Joined After 2016'), lty=1:2, bty = 'n', ncol = 2)
+</code></pre>
+
+<p>The plot looks like this:</p>
+
+<p><img src="https://raw.githubusercontent.com/risson/risson.github.io/master/survivalplot1.png"></p>
+
+<p>It seems like dropout rate is getting higher after 2016 than before. If we show this result to the C-suite, they must be shocked!</p>
+
+<h2 id="3verifyfindingandmakechanges">3. Verify finding and make changes</h2>
+
+<p>Wait, as a professional data scientist, we need to be careful when showing insights to senior management group. Is there anything wrong in the process we've done?</p>
+
+<p>Actually yes. When we look at the group 'Joined After 2016', we found that people can sign up from 2016, or early 2017. Note that we captured data till April 14, 2017. For those people who signed up in April 2017, clearly they only 'survived' for less than 1 month, no matter they really dropped out or not. Compared with those who signed up from before 2016, total amount of survivals must always be higher.</p>
+
+<p>So, we have to make changes. We look at survival within 300 days. Also, we remove students who signed up after April 14, 2016.</p>
+
+<pre><code>df2 &lt;- df1[SignUpDate&lt;=as.Date('2016-4-14')]
+</code></pre>
+
+<p>Let's plot again:</p>
+
+<pre><code>fit &lt;- survfit(Surv(Days, Dropout) ~ SignUpAFT2016, data = df2)
+
+# Plot the results, add a legend, add a title
+plot(fit, lty = 1:2, mark.time = FALSE, xlim=c(0,300), ylim=c(.75,1), xlab = 'Days since Joining', ylab = 'Percent Surviving')
+legend(10, 0.8, c('Joined Before 2016', 'Joined After 2016'), lty=1:2, bty = 'n', ncol = 2)
+title(main = "EF Survival Curves by Enroll Date (before vs. after 2016)")
+</code></pre>
+
+<p><img src="https://raw.githubusercontent.com/risson/risson.github.io/master/survivalplot3.png"></p>
+
+<p>Now the survival curve looks much more reasonable. It seems like our 5 month retention rate is better than before, but retention for more than 160 days seems worse. This means we need to dig out reasons why retention for longer period is worse than before. Is it because we set up stricter rules on short term retention? Did we launch new course products for which our students didn't like that much? Those questions will lead us to create new analytics projects.</p>
 <!-- content end -->
 </div>
 <br>
