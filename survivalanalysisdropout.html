@@ -29,9 +29,96 @@ This quarter our objective is to analyze on students' dropout. We want to unders
 
 As a first step, we would like to look at whether our students are leaving us faster than before.
 
-I understand that survival analysis is a great tool to do this kind of analysis. [This blog](http://daynebatten.com)  is a great place for you to learn more about survival analysis (especially these posts: ). In this post, I'll demo how I use it.
+I understand that survival analysis is a great tool to do this kind of analysis. [This blog](http://daynebatten.com)  is a great place for you to learn more about survival analysis (especially posts from 2016 to 2017). In this post, I'll demo how I use it.
 
-Below is a mockup data set that I used:
+## 1. Reshape data set
+
+Below is a mockup data set that I originally have (from 2014-1-1 to 2017-4-14) (df1):
+
+<table>
+<tr>
+<td>CustomerKey</td>
+<td>CustomerStatus</td>
+<td>CustomerSubStatus</td>
+<td>CourseMemberKey</td>
+<td>CourseStatus</td>
+<td>StartDate</td>
+<td>EndDate</td>
+<td>Age</td>
+</tr>
+<tr>
+<td>001</td>
+<td>ExStudent</td>
+<td>Cancle</td>
+<td>CM001</td>
+<td>Finish</td>
+<td>2015-12-21</td>
+<td>2016-02-23</td>
+<td>7</td>
+</tr>
+<tr>
+<td>001</td>
+<td>ExStudent</td>
+<td>Cancle</td>
+<td>CM102</td>
+<td>Dropout</td>
+<td>2016-03-30</td>
+<td>2016-06-30</td>
+<td>8</td>
+</tr>
+<tr>
+<td>002</td>
+<td>Student</td>
+<td>Studying</td>
+<td>CM001</td>
+<td>Finish</td>
+<td>2015-12-21</td>
+<td>2016-02-23</td>
+<td>7</td>
+</tr>
+<tr>
+<td>002</td>
+<td>Student</td>
+<td>Studying</td>
+<td>CM102</td>
+<td>Finish</td>
+<td>2016-03-30</td>
+<td>2016-07-30</td>
+<td>8</td>
+</tr>
+<tr>
+<td>002</td>
+<td>Student</td>
+<td>Studying</td>
+<td>CM103</td>
+<td>Finish</td>
+<td>2016-08-01</td>
+<td>2017-04-08</td>
+<td>8</td>
+</tr>
+<tr>
+<td>003</td>
+<td>Student</td>
+<td>Waiting</td>
+<td>CM103</td>
+<td>Continue</td>
+<td>2016-08-01</td>
+<td>2017-04-08</td>
+<td>8</td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+</table>
+
+We need to re-organize the data set in order to match the format that the R package for survival analysis can understand (df2):
 
 <table>
 <tr>
@@ -39,20 +126,60 @@ Below is a mockup data set that I used:
 <td>SignUpAge</td>
 <td>SignUpDate</td>
 <td>LastDate</td>
-<td>Churn</td>
+<td>Dropout</td>
 <td>SignUpAfter2016</td>
 <td>Days</td>
 </tr>
 <tr>
 <td>001</td>
-<td>9</td>
-<td>2016-01-24</td>
-<td>2017-04-14</td>
-<td>Churn</td>
-<td>SignUpAfter2016</td>
-<td>Days</td>
+<td>7</td>
+<td>2015-12-21</td>
+<td>2016-06-30</td>
+<td>1</td>
+<td>0</td>
+<td>192</td>
+</tr>
+<tr>
+<td>002</td>
+<td>7</td>
+<td>2015-12-21</td>
+<td>2017-04-08</td>
+<td>0</td>
+<td>0</td>
+<td>474</td>
+</tr>
+<tr>
+<td>003</td>
+<td>8</td>
+<td>2016-08-01</td>
+<td>2017-04-08</td>
+<td>0</td>
+<td>1</td>
+<td>250</td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
 </tr>
 </table>
+
+
+Note that each customer can take several courses. Each course has it's status. Each customer has a status and sub status. We only capture the last customer status and customer sub status. Historical customer status are not kept for every course a customer takes. We will not mark a customer as dropout as long as his/her customer status is student.
+
+## 2. Create Survival Curve
+
+```r
+
+
+
+
+
+
 
 
 <!-- markdown end -->
@@ -63,9 +190,96 @@ Below is a mockup data set that I used:
 
 <p>As a first step, we would like to look at whether our students are leaving us faster than before.</p>
 
-<p>I understand that survival analysis is a great tool to do this kind of analysis. <a href="http://daynebatten.com">This blog</a>  is a great place for you to learn more about survival analysis (especially these posts: ). In this post, I'll demo how I use it.</p>
+<p>I understand that survival analysis is a great tool to do this kind of analysis. <a href="http://daynebatten.com">This blog</a>  is a great place for you to learn more about survival analysis (especially posts from 2016 to 2017). In this post, I'll demo how I use it.</p>
 
-<p>Below is a mockup data set that I used:</p>
+<h2 id="1reshapedataset">1. Reshape data set</h2>
+
+<p>Below is a mockup data set that I originally have (from 2014-1-1 to 2017-4-14) (df1):</p>
+
+<table>
+<tbody><tr>
+<td>CustomerKey</td>
+<td>CustomerStatus</td>
+<td>CustomerSubStatus</td>
+<td>CourseMemberKey</td>
+<td>CourseStatus</td>
+<td>StartDate</td>
+<td>EndDate</td>
+<td>Age</td>
+</tr>
+<tr>
+<td>001</td>
+<td>ExStudent</td>
+<td>Cancle</td>
+<td>CM001</td>
+<td>Finish</td>
+<td>2015-12-21</td>
+<td>2016-02-23</td>
+<td>7</td>
+</tr>
+<tr>
+<td>001</td>
+<td>ExStudent</td>
+<td>Cancle</td>
+<td>CM102</td>
+<td>Dropout</td>
+<td>2016-03-30</td>
+<td>2016-06-30</td>
+<td>8</td>
+</tr>
+<tr>
+<td>002</td>
+<td>Student</td>
+<td>Studying</td>
+<td>CM001</td>
+<td>Finish</td>
+<td>2015-12-21</td>
+<td>2016-02-23</td>
+<td>7</td>
+</tr>
+<tr>
+<td>002</td>
+<td>Student</td>
+<td>Studying</td>
+<td>CM102</td>
+<td>Finish</td>
+<td>2016-03-30</td>
+<td>2016-07-30</td>
+<td>8</td>
+</tr>
+<tr>
+<td>002</td>
+<td>Student</td>
+<td>Studying</td>
+<td>CM103</td>
+<td>Finish</td>
+<td>2016-08-01</td>
+<td>2017-04-08</td>
+<td>8</td>
+</tr>
+<tr>
+<td>003</td>
+<td>Student</td>
+<td>Waiting</td>
+<td>CM103</td>
+<td>Continue</td>
+<td>2016-08-01</td>
+<td>2017-04-08</td>
+<td>8</td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+</tbody></table>
+
+<p>We need to re-organize the data set in order to match the format that the R package for survival analysis can understand (df2):</p>
 
 <table>
 <tbody><tr>
@@ -73,20 +287,53 @@ Below is a mockup data set that I used:
 <td>SignUpAge</td>
 <td>SignUpDate</td>
 <td>LastDate</td>
-<td>Churn</td>
+<td>Dropout</td>
 <td>SignUpAfter2016</td>
 <td>Days</td>
 </tr>
 <tr>
 <td>001</td>
-<td>9</td>
-<td>2016-01-24</td>
-<td>2017-04-14</td>
-<td>Churn</td>
-<td>SignUpAfter2016</td>
-<td>Days</td>
+<td>7</td>
+<td>2015-12-21</td>
+<td>2016-06-30</td>
+<td>1</td>
+<td>0</td>
+<td>192</td>
+</tr>
+<tr>
+<td>002</td>
+<td>7</td>
+<td>2015-12-21</td>
+<td>2017-04-08</td>
+<td>0</td>
+<td>0</td>
+<td>474</td>
+</tr>
+<tr>
+<td>003</td>
+<td>8</td>
+<td>2016-08-01</td>
+<td>2017-04-08</td>
+<td>0</td>
+<td>1</td>
+<td>250</td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
 </tr>
 </tbody></table>
+
+<p>Note that each customer can take several courses. Each course has it's status. Each customer has a status and sub status. We only capture the last customer status and customer sub status. Historical customer status are not kept for every course a customer takes. We will not mark a customer as dropout as long as his/her customer status is student.</p>
+
+<h2 id="2createsurvivalcurve">2. Create Survival Curve</h2>
+
+<p>```r</p>
 <!-- content end -->
 </div>
 <br>
