@@ -180,7 +180,7 @@ We need to re-organize the data set in order to match the format that the R pack
 
 Note that each customer can take several courses. Each course has it's status. Each customer has a status and sub status. We only capture the last customer status and customer sub status. Historical customer status are not kept for every course a customer takes. We will not mark a customer as dropout as long as his/her customer status is student.
 
-## 2. Create Survival Curve
+## 3. Create Survival Curve
 
 ```
 # Fit survival curves based on the sign up time binary
@@ -197,7 +197,7 @@ The plot looks like this:
 
 It seems like dropout rate is getting higher after 2016 than before. If we show this result to the C-suite, they must be shocked!
 
-## 3. Verify finding and make changes
+## 4. Verify finding and make changes
 
 Wait, as a professional data scientist, we need to be careful when showing insights to senior management group. Is there anything wrong in the process we've done?
 
@@ -382,7 +382,7 @@ library(survival)
 
 <p>Note that each customer can take several courses. Each course has it's status. Each customer has a status and sub status. We only capture the last customer status and customer sub status. Historical customer status are not kept for every course a customer takes. We will not mark a customer as dropout as long as his/her customer status is student.</p>
 
-<h2 id="2createsurvivalcurve">2. Create Survival Curve</h2>
+<h2 id="3createsurvivalcurve">3. Create Survival Curve</h2>
 
 <pre><code># Fit survival curves based on the sign up time binary
 fit &lt;- survfit(Surv(Days, Churn) ~ SignUpAFT2016, data = df1)
@@ -398,7 +398,7 @@ legend(10, 0.6, c('Joined Before 2016', 'Joined After 2016'), lty=1:2, bty = 'n'
 
 <p>It seems like dropout rate is getting higher after 2016 than before. If we show this result to the C-suite, they must be shocked!</p>
 
-<h2 id="3verifyfindingandmakechanges">3. Verify finding and make changes</h2>
+<h2 id="4verifyfindingandmakechanges">4. Verify finding and make changes</h2>
 
 <p>Wait, as a professional data scientist, we need to be careful when showing insights to senior management group. Is there anything wrong in the process we've done?</p>
 
